@@ -9,38 +9,308 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkoutsRouteImport } from './routes/workouts'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RevenueShareRouteImport } from './routes/revenue-share'
+import { Route as PayoutsRouteImport } from './routes/payouts'
+import { Route as MembersRouteImport } from './routes/members'
+import { Route as JoinRequestsRouteImport } from './routes/join-requests'
+import { Route as ExercisesRouteImport } from './routes/exercises'
+import { Route as DietsRouteImport } from './routes/diets'
+import { Route as AuditLogsRouteImport } from './routes/audit-logs'
+import { Route as AiPlansRouteImport } from './routes/ai-plans'
+import { Route as AdminsRouteImport } from './routes/admins'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GymsIndexRouteImport } from './routes/gyms.index'
+import { Route as GymsIdRouteImport } from './routes/gyms.$id'
 
+const WorkoutsRoute = WorkoutsRouteImport.update({
+  id: '/workouts',
+  path: '/workouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevenueShareRoute = RevenueShareRouteImport.update({
+  id: '/revenue-share',
+  path: '/revenue-share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayoutsRoute = PayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembersRoute = MembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRequestsRoute = JoinRequestsRouteImport.update({
+  id: '/join-requests',
+  path: '/join-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExercisesRoute = ExercisesRouteImport.update({
+  id: '/exercises',
+  path: '/exercises',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DietsRoute = DietsRouteImport.update({
+  id: '/diets',
+  path: '/diets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogsRoute = AuditLogsRouteImport.update({
+  id: '/audit-logs',
+  path: '/audit-logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiPlansRoute = AiPlansRouteImport.update({
+  id: '/ai-plans',
+  path: '/ai-plans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminsRoute = AdminsRouteImport.update({
+  id: '/admins',
+  path: '/admins',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GymsIndexRoute = GymsIndexRouteImport.update({
+  id: '/gyms/',
+  path: '/gyms/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GymsIdRoute = GymsIdRouteImport.update({
+  id: '/gyms/$id',
+  path: '/gyms/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admins': typeof AdminsRoute
+  '/ai-plans': typeof AiPlansRoute
+  '/audit-logs': typeof AuditLogsRoute
+  '/diets': typeof DietsRoute
+  '/exercises': typeof ExercisesRoute
+  '/join-requests': typeof JoinRequestsRoute
+  '/members': typeof MembersRoute
+  '/payouts': typeof PayoutsRoute
+  '/revenue-share': typeof RevenueShareRoute
+  '/settings': typeof SettingsRoute
+  '/subscriptions': typeof SubscriptionsRoute
+  '/workouts': typeof WorkoutsRoute
+  '/gyms/$id': typeof GymsIdRoute
+  '/gyms/': typeof GymsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admins': typeof AdminsRoute
+  '/ai-plans': typeof AiPlansRoute
+  '/audit-logs': typeof AuditLogsRoute
+  '/diets': typeof DietsRoute
+  '/exercises': typeof ExercisesRoute
+  '/join-requests': typeof JoinRequestsRoute
+  '/members': typeof MembersRoute
+  '/payouts': typeof PayoutsRoute
+  '/revenue-share': typeof RevenueShareRoute
+  '/settings': typeof SettingsRoute
+  '/subscriptions': typeof SubscriptionsRoute
+  '/workouts': typeof WorkoutsRoute
+  '/gyms/$id': typeof GymsIdRoute
+  '/gyms': typeof GymsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admins': typeof AdminsRoute
+  '/ai-plans': typeof AiPlansRoute
+  '/audit-logs': typeof AuditLogsRoute
+  '/diets': typeof DietsRoute
+  '/exercises': typeof ExercisesRoute
+  '/join-requests': typeof JoinRequestsRoute
+  '/members': typeof MembersRoute
+  '/payouts': typeof PayoutsRoute
+  '/revenue-share': typeof RevenueShareRoute
+  '/settings': typeof SettingsRoute
+  '/subscriptions': typeof SubscriptionsRoute
+  '/workouts': typeof WorkoutsRoute
+  '/gyms/$id': typeof GymsIdRoute
+  '/gyms/': typeof GymsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admins'
+    | '/ai-plans'
+    | '/audit-logs'
+    | '/diets'
+    | '/exercises'
+    | '/join-requests'
+    | '/members'
+    | '/payouts'
+    | '/revenue-share'
+    | '/settings'
+    | '/subscriptions'
+    | '/workouts'
+    | '/gyms/$id'
+    | '/gyms/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admins'
+    | '/ai-plans'
+    | '/audit-logs'
+    | '/diets'
+    | '/exercises'
+    | '/join-requests'
+    | '/members'
+    | '/payouts'
+    | '/revenue-share'
+    | '/settings'
+    | '/subscriptions'
+    | '/workouts'
+    | '/gyms/$id'
+    | '/gyms'
+  id:
+    | '__root__'
+    | '/'
+    | '/admins'
+    | '/ai-plans'
+    | '/audit-logs'
+    | '/diets'
+    | '/exercises'
+    | '/join-requests'
+    | '/members'
+    | '/payouts'
+    | '/revenue-share'
+    | '/settings'
+    | '/subscriptions'
+    | '/workouts'
+    | '/gyms/$id'
+    | '/gyms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminsRoute: typeof AdminsRoute
+  AiPlansRoute: typeof AiPlansRoute
+  AuditLogsRoute: typeof AuditLogsRoute
+  DietsRoute: typeof DietsRoute
+  ExercisesRoute: typeof ExercisesRoute
+  JoinRequestsRoute: typeof JoinRequestsRoute
+  MembersRoute: typeof MembersRoute
+  PayoutsRoute: typeof PayoutsRoute
+  RevenueShareRoute: typeof RevenueShareRoute
+  SettingsRoute: typeof SettingsRoute
+  SubscriptionsRoute: typeof SubscriptionsRoute
+  WorkoutsRoute: typeof WorkoutsRoute
+  GymsIdRoute: typeof GymsIdRoute
+  GymsIndexRoute: typeof GymsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/workouts': {
+      id: '/workouts'
+      path: '/workouts'
+      fullPath: '/workouts'
+      preLoaderRoute: typeof WorkoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revenue-share': {
+      id: '/revenue-share'
+      path: '/revenue-share'
+      fullPath: '/revenue-share'
+      preLoaderRoute: typeof RevenueShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payouts': {
+      id: '/payouts'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof PayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/members': {
+      id: '/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof MembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join-requests': {
+      id: '/join-requests'
+      path: '/join-requests'
+      fullPath: '/join-requests'
+      preLoaderRoute: typeof JoinRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exercises': {
+      id: '/exercises'
+      path: '/exercises'
+      fullPath: '/exercises'
+      preLoaderRoute: typeof ExercisesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diets': {
+      id: '/diets'
+      path: '/diets'
+      fullPath: '/diets'
+      preLoaderRoute: typeof DietsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-logs': {
+      id: '/audit-logs'
+      path: '/audit-logs'
+      fullPath: '/audit-logs'
+      preLoaderRoute: typeof AuditLogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-plans': {
+      id: '/ai-plans'
+      path: '/ai-plans'
+      fullPath: '/ai-plans'
+      preLoaderRoute: typeof AiPlansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admins': {
+      id: '/admins'
+      path: '/admins'
+      fullPath: '/admins'
+      preLoaderRoute: typeof AdminsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +318,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gyms/': {
+      id: '/gyms/'
+      path: '/gyms'
+      fullPath: '/gyms/'
+      preLoaderRoute: typeof GymsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gyms/$id': {
+      id: '/gyms/$id'
+      path: '/gyms/$id'
+      fullPath: '/gyms/$id'
+      preLoaderRoute: typeof GymsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminsRoute: AdminsRoute,
+  AiPlansRoute: AiPlansRoute,
+  AuditLogsRoute: AuditLogsRoute,
+  DietsRoute: DietsRoute,
+  ExercisesRoute: ExercisesRoute,
+  JoinRequestsRoute: JoinRequestsRoute,
+  MembersRoute: MembersRoute,
+  PayoutsRoute: PayoutsRoute,
+  RevenueShareRoute: RevenueShareRoute,
+  SettingsRoute: SettingsRoute,
+  SubscriptionsRoute: SubscriptionsRoute,
+  WorkoutsRoute: WorkoutsRoute,
+  GymsIdRoute: GymsIdRoute,
+  GymsIndexRoute: GymsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

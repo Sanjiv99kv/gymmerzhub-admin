@@ -3,7 +3,7 @@ import { PageHeader, Button, Panel, Table, Tr, Td, StatusBadge, Input, Select, R
 import { gyms } from "@/lib/mock";
 import { Plus } from "lucide-react";
 
-export const Route = createFileRoute("/gyms")({
+export const Route = createFileRoute("/gyms/")({
   head: () => ({
     meta: [
       { title: "Gyms · GymmerzHub Admin" },
