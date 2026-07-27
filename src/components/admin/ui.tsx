@@ -3,7 +3,7 @@ import { MoreHorizontal } from "lucide-react";
 
 export function PageHeader({
   title, subtitle, breadcrumb, actions,
-}: { title: string; subtitle?: string; breadcrumb?: string; actions?: ReactNode }) {
+}: { title: string; subtitle?: string; breadcrumb?: ReactNode; actions?: ReactNode }) {
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
