@@ -15,12 +15,10 @@ import { AdminShell } from "../components/admin/admin-shell";
 
 function NotFoundComponent() {
   return (
-    <AdminShell>
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <h1 className="text-6xl font-bold">404</h1>
-        <p className="mt-2 text-muted-foreground">Page not found.</p>
-      </div>
-    </AdminShell>
+    <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+      <h1 className="text-6xl font-bold">404</h1>
+      <p className="mt-2 text-muted-foreground">Page not found.</p>
+    </div>
   );
 }
 
