@@ -1,10 +1,18 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Dumbbell, Users, UserPlus, Library, ClipboardList,
   Salad, Sparkles, CreditCard, PercentCircle, Banknote, ShieldCheck,
-  Settings as SettingsIcon, ScrollText, Search, Bell,
+  Settings as SettingsIcon, ScrollText, Search, Bell, LogOut,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import {
+  clearAdminSession,
+  getAdminSession,
+  logoutAdmin,
+  type AdminSession,
+} from "../../lib/admin-auth";
+import { formatApiError } from "../../lib/api";
+import { toast } from "sonner";
 
 type Item = { to: string; label: string; icon: typeof LayoutDashboard };
 type Group = { label: string; items: Item[] };
@@ -48,15 +56,59 @@ const groups: Group[] = [
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const [session, setSession] = useState<AdminSession | null>(null);
+  const [ready, setReady] = useState(false);
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/"));
 
+  useEffect(() => {
+    const current = getAdminSession();
+    if (!current) {
+      navigate({ to: "/login" });
+      return;
+    }
+    setSession(current);
+    setReady(true);
+  }, [navigate, pathname]);
+
+  const initials = (session?.admin.fullName || "AD")
+    .split(/\s+/)
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const onSignOut = async () => {
+    try {
+      await logoutAdmin();
+    } catch (error) {
+      clearAdminSession();
+      toast.error(formatApiError(error, "Could not sign out"));
+    }
+    navigate({ to: "/login" });
+  };
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground text-sm">
+        Loading console…
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex h-svh overflow-hidden bg-background text-foreground">
       {/* Sidebar */}
-      <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-sidebar">
-        <div className="px-5 py-5 border-b border-sidebar-border">
+      <aside className="hidden md:flex h-full w-64 shrink-0 flex-col border-r border-border bg-sidebar">
+        <div className="px-5 py-5 border-b border-sidebar-border shrink-0">
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-md bg-lime grid place-items-center text-lime-foreground font-black">G</div>
+            <img
+              src="/gymmerzhub.png"
+              alt="GymmerzHub"
+              width={28}
+              height={28}
+              className="h-7 w-7 rounded-md"
+            />
             <div>
               <div className="text-sm font-semibold tracking-tight text-foreground">GymmerzHub</div>
               <div className="text-[11px] text-muted-foreground">Admin console</div>
@@ -64,7 +116,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+        <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4 space-y-6">
           {groups.map((g) => (
             <div key={g.label}>
               <div className="px-3 mb-2 text-[10px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{g.label}</div>
@@ -94,21 +146,44 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Bottom admin profile */}
-        <div className="border-t border-sidebar-border p-3">
-          <div className="flex items-center gap-3 rounded-md bg-sidebar-accent/40 p-2">
-            <div className="h-8 w-8 rounded-full bg-lime grid place-items-center text-lime-foreground text-xs font-bold">AR</div>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium">Alex Reyes</div>
-              <div className="truncate text-[11px] text-muted-foreground">alex@gymmerzhub.com</div>
+        <div className="shrink-0 border-t border-sidebar-border p-3 space-y-1.5">
+          <Link
+            to="/profile"
+            className={`flex items-center gap-3 rounded-md p-2 transition-colors ${
+              isActive("/profile")
+                ? "bg-sidebar-accent text-foreground"
+                : "bg-sidebar-accent/40 hover:bg-sidebar-accent"
+            }`}
+          >
+            <div className="h-8 w-8 rounded-full bg-lime grid place-items-center text-lime-foreground text-xs font-bold">
+              {initials}
             </div>
-            <span className="rounded-full bg-lime/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-lime">Super</span>
-          </div>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-medium">
+                {session?.admin.fullName ?? "Admin"}
+              </div>
+              <div className="truncate text-[11px] text-muted-foreground">
+                {session?.admin.email ?? "admin@gymmerzhub.com"}
+              </div>
+            </div>
+            <span className="rounded-full bg-lime/15 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-lime">
+              {session?.admin.status ?? "active"}
+            </span>
+          </Link>
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            Sign out
+          </button>
         </div>
       </aside>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/80 backdrop-blur px-4 md:px-6">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <header className="z-20 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background/80 backdrop-blur px-4 md:px-6">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
@@ -124,7 +199,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
             All systems normal
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-8">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-8">{children}</main>
       </div>
     </div>
   );

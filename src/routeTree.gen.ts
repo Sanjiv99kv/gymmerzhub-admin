@@ -9,75 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WorkoutsRouteImport } from './routes/workouts'
-import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as RevenueShareRouteImport } from './routes/revenue-share'
-import { Route as PayoutsRouteImport } from './routes/payouts'
-import { Route as MembersRouteImport } from './routes/members'
-import { Route as JoinRequestsRouteImport } from './routes/join-requests'
-import { Route as ExercisesRouteImport } from './routes/exercises'
-import { Route as DietsRouteImport } from './routes/diets'
-import { Route as AuditLogsRouteImport } from './routes/audit-logs'
-import { Route as AiPlansRouteImport } from './routes/ai-plans'
-import { Route as AdminsRouteImport } from './routes/admins'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminsRouteImport } from './routes/admins'
+import { Route as AiPlansRouteImport } from './routes/ai-plans'
+import { Route as AuditLogsRouteImport } from './routes/audit-logs'
+import { Route as DietsRouteImport } from './routes/diets'
+import { Route as ExercisesRouteImport } from './routes/exercises'
+import { Route as JoinRequestsRouteImport } from './routes/join-requests'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as MembersRouteImport } from './routes/members'
+import { Route as PayoutsRouteImport } from './routes/payouts'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as RevenueShareRouteImport } from './routes/revenue-share'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
+import { Route as WorkoutsRouteImport } from './routes/workouts'
 import { Route as GymsIndexRouteImport } from './routes/gyms.index'
 import { Route as GymsIdRouteImport } from './routes/gyms.$id'
 
-const WorkoutsRoute = WorkoutsRouteImport.update({
-  id: '/workouts',
-  path: '/workouts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SubscriptionsRoute = SubscriptionsRouteImport.update({
-  id: '/subscriptions',
-  path: '/subscriptions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RevenueShareRoute = RevenueShareRouteImport.update({
-  id: '/revenue-share',
-  path: '/revenue-share',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PayoutsRoute = PayoutsRouteImport.update({
-  id: '/payouts',
-  path: '/payouts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MembersRoute = MembersRouteImport.update({
-  id: '/members',
-  path: '/members',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JoinRequestsRoute = JoinRequestsRouteImport.update({
-  id: '/join-requests',
-  path: '/join-requests',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExercisesRoute = ExercisesRouteImport.update({
-  id: '/exercises',
-  path: '/exercises',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DietsRoute = DietsRouteImport.update({
-  id: '/diets',
-  path: '/diets',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditLogsRoute = AuditLogsRouteImport.update({
-  id: '/audit-logs',
-  path: '/audit-logs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiPlansRoute = AiPlansRouteImport.update({
-  id: '/ai-plans',
-  path: '/ai-plans',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminsRoute = AdminsRouteImport.update({
@@ -85,9 +37,69 @@ const AdminsRoute = AdminsRouteImport.update({
   path: '/admins',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AiPlansRoute = AiPlansRouteImport.update({
+  id: '/ai-plans',
+  path: '/ai-plans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogsRoute = AuditLogsRouteImport.update({
+  id: '/audit-logs',
+  path: '/audit-logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DietsRoute = DietsRouteImport.update({
+  id: '/diets',
+  path: '/diets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExercisesRoute = ExercisesRouteImport.update({
+  id: '/exercises',
+  path: '/exercises',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRequestsRoute = JoinRequestsRouteImport.update({
+  id: '/join-requests',
+  path: '/join-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembersRoute = MembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayoutsRoute = PayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevenueShareRoute = RevenueShareRouteImport.update({
+  id: '/revenue-share',
+  path: '/revenue-share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkoutsRoute = WorkoutsRouteImport.update({
+  id: '/workouts',
+  path: '/workouts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GymsIndexRoute = GymsIndexRouteImport.update({
@@ -109,8 +121,10 @@ export interface FileRoutesByFullPath {
   '/diets': typeof DietsRoute
   '/exercises': typeof ExercisesRoute
   '/join-requests': typeof JoinRequestsRoute
+  '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/payouts': typeof PayoutsRoute
+  '/profile': typeof ProfileRoute
   '/revenue-share': typeof RevenueShareRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
@@ -126,8 +140,10 @@ export interface FileRoutesByTo {
   '/diets': typeof DietsRoute
   '/exercises': typeof ExercisesRoute
   '/join-requests': typeof JoinRequestsRoute
+  '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/payouts': typeof PayoutsRoute
+  '/profile': typeof ProfileRoute
   '/revenue-share': typeof RevenueShareRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
@@ -144,8 +160,10 @@ export interface FileRoutesById {
   '/diets': typeof DietsRoute
   '/exercises': typeof ExercisesRoute
   '/join-requests': typeof JoinRequestsRoute
+  '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/payouts': typeof PayoutsRoute
+  '/profile': typeof ProfileRoute
   '/revenue-share': typeof RevenueShareRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
@@ -163,8 +181,10 @@ export interface FileRouteTypes {
     | '/diets'
     | '/exercises'
     | '/join-requests'
+    | '/login'
     | '/members'
     | '/payouts'
+    | '/profile'
     | '/revenue-share'
     | '/settings'
     | '/subscriptions'
@@ -180,8 +200,10 @@ export interface FileRouteTypes {
     | '/diets'
     | '/exercises'
     | '/join-requests'
+    | '/login'
     | '/members'
     | '/payouts'
+    | '/profile'
     | '/revenue-share'
     | '/settings'
     | '/subscriptions'
@@ -197,8 +219,10 @@ export interface FileRouteTypes {
     | '/diets'
     | '/exercises'
     | '/join-requests'
+    | '/login'
     | '/members'
     | '/payouts'
+    | '/profile'
     | '/revenue-share'
     | '/settings'
     | '/subscriptions'
@@ -215,8 +239,10 @@ export interface RootRouteChildren {
   DietsRoute: typeof DietsRoute
   ExercisesRoute: typeof ExercisesRoute
   JoinRequestsRoute: typeof JoinRequestsRoute
+  LoginRoute: typeof LoginRoute
   MembersRoute: typeof MembersRoute
   PayoutsRoute: typeof PayoutsRoute
+  ProfileRoute: typeof ProfileRoute
   RevenueShareRoute: typeof RevenueShareRoute
   SettingsRoute: typeof SettingsRoute
   SubscriptionsRoute: typeof SubscriptionsRoute
@@ -227,81 +253,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/workouts': {
-      id: '/workouts'
-      path: '/workouts'
-      fullPath: '/workouts'
-      preLoaderRoute: typeof WorkoutsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/subscriptions': {
-      id: '/subscriptions'
-      path: '/subscriptions'
-      fullPath: '/subscriptions'
-      preLoaderRoute: typeof SubscriptionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/revenue-share': {
-      id: '/revenue-share'
-      path: '/revenue-share'
-      fullPath: '/revenue-share'
-      preLoaderRoute: typeof RevenueShareRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/payouts': {
-      id: '/payouts'
-      path: '/payouts'
-      fullPath: '/payouts'
-      preLoaderRoute: typeof PayoutsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/members': {
-      id: '/members'
-      path: '/members'
-      fullPath: '/members'
-      preLoaderRoute: typeof MembersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/join-requests': {
-      id: '/join-requests'
-      path: '/join-requests'
-      fullPath: '/join-requests'
-      preLoaderRoute: typeof JoinRequestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/exercises': {
-      id: '/exercises'
-      path: '/exercises'
-      fullPath: '/exercises'
-      preLoaderRoute: typeof ExercisesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/diets': {
-      id: '/diets'
-      path: '/diets'
-      fullPath: '/diets'
-      preLoaderRoute: typeof DietsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-logs': {
-      id: '/audit-logs'
-      path: '/audit-logs'
-      fullPath: '/audit-logs'
-      preLoaderRoute: typeof AuditLogsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai-plans': {
-      id: '/ai-plans'
-      path: '/ai-plans'
-      fullPath: '/ai-plans'
-      preLoaderRoute: typeof AiPlansRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admins': {
@@ -311,11 +267,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/ai-plans': {
+      id: '/ai-plans'
+      path: '/ai-plans'
+      fullPath: '/ai-plans'
+      preLoaderRoute: typeof AiPlansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-logs': {
+      id: '/audit-logs'
+      path: '/audit-logs'
+      fullPath: '/audit-logs'
+      preLoaderRoute: typeof AuditLogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diets': {
+      id: '/diets'
+      path: '/diets'
+      fullPath: '/diets'
+      preLoaderRoute: typeof DietsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exercises': {
+      id: '/exercises'
+      path: '/exercises'
+      fullPath: '/exercises'
+      preLoaderRoute: typeof ExercisesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join-requests': {
+      id: '/join-requests'
+      path: '/join-requests'
+      fullPath: '/join-requests'
+      preLoaderRoute: typeof JoinRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/members': {
+      id: '/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof MembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payouts': {
+      id: '/payouts'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof PayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revenue-share': {
+      id: '/revenue-share'
+      path: '/revenue-share'
+      fullPath: '/revenue-share'
+      preLoaderRoute: typeof RevenueShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workouts': {
+      id: '/workouts'
+      path: '/workouts'
+      fullPath: '/workouts'
+      preLoaderRoute: typeof WorkoutsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gyms/': {
@@ -343,8 +383,10 @@ const rootRouteChildren: RootRouteChildren = {
   DietsRoute: DietsRoute,
   ExercisesRoute: ExercisesRoute,
   JoinRequestsRoute: JoinRequestsRoute,
+  LoginRoute: LoginRoute,
   MembersRoute: MembersRoute,
   PayoutsRoute: PayoutsRoute,
+  ProfileRoute: ProfileRoute,
   RevenueShareRoute: RevenueShareRoute,
   SettingsRoute: SettingsRoute,
   SubscriptionsRoute: SubscriptionsRoute,

@@ -5,13 +5,13 @@ export function PageHeader({
   title, subtitle, breadcrumb, actions,
 }: { title: string; subtitle?: string; breadcrumb?: ReactNode; actions?: ReactNode }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
         {breadcrumb && (
-          <div className="text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase mb-2">{breadcrumb}</div>
+          <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{breadcrumb}</div>
         )}
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">{title}</h1>
-        {subtitle && <p className="mt-1.5 text-sm text-muted-foreground max-w-2xl">{subtitle}</p>}
+        <h1 className="text-xl font-semibold tracking-tight md:text-2xl">{title}</h1>
+        {subtitle && <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">{subtitle}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -50,21 +50,21 @@ export function StatCard({
   const positive = delta?.startsWith("+");
   return (
     <div className="rounded-xl border border-border bg-panel p-5">
-      <div className="text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{label}</div>
+      <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</div>
       <div className="mt-3 flex items-end justify-between gap-3">
-        <div className="text-3xl font-semibold tracking-tight">{value}</div>
+        <div className="text-2xl font-semibold tracking-tight tabular-nums md:text-3xl">{value}</div>
         {delta && (
-          <span className={`text-xs font-medium ${positive ? "text-lime" : "text-red-400"}`}>{delta}</span>
+          <span className={`text-[11px] font-medium tabular-nums ${positive ? "text-lime" : "text-red-400"}`}>{delta}</span>
         )}
       </div>
-      {hint && <div className="mt-2 text-xs text-muted-foreground">{hint}</div>}
+      {hint && <div className="mt-2 text-[11px] text-muted-foreground">{hint}</div>}
     </div>
   );
 }
 
 export function Panel({ children, className = "", title, actions }: { children: ReactNode; className?: string; title?: string; actions?: ReactNode }) {
   return (
-    <div className={`rounded-xl border border-border bg-panel ${className}`}>
+    <div className={`overflow-hidden rounded-xl border border-border bg-panel ${className}`}>
       {(title || actions) && (
         <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
           {title && <div className="text-sm font-semibold">{title}</div>}
@@ -79,7 +79,7 @@ export function Panel({ children, className = "", title, actions }: { children: 
 export function Button({
   variant = "primary", size = "md", children, className = "", ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost" | "danger"; size?: "sm" | "md" }) {
-  const base = "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-lime disabled:opacity-50";
+  const base = "inline-flex cursor-pointer items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-lime disabled:cursor-not-allowed disabled:opacity-50";
   const sizes = { sm: "h-8 px-3 text-xs", md: "h-9 px-4 text-sm" };
   const variants = {
     primary: "bg-lime text-lime-foreground hover:bg-lime/90",
@@ -92,7 +92,7 @@ export function Button({
 
 export function IconButton({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className="h-8 w-8 grid place-items-center rounded-md border border-border bg-panel-2 text-muted-foreground hover:text-foreground hover:bg-accent" {...props}>
+    <button className="grid h-8 w-8 cursor-pointer place-items-center rounded-md border border-border bg-panel-2 text-muted-foreground hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50" {...props}>
       {children}
     </button>
   );
@@ -145,7 +145,7 @@ export function Tabs({ tabs, active, onChange }: { tabs: string[]; active: strin
         <button
           key={t}
           onClick={() => onChange(t)}
-          className={`relative px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
+          className={`relative cursor-pointer px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
             active === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -161,7 +161,7 @@ export function Select({ children, ...props }: React.SelectHTMLAttributes<HTMLSe
   return (
     <select
       {...props}
-      className="h-9 rounded-md border border-border bg-panel-2 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-lime"
+      className="h-9 cursor-pointer rounded-md border border-border bg-panel-2 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-lime disabled:cursor-not-allowed"
     >{children}</select>
   );
 }
