@@ -13,12 +13,19 @@ import {
   EmptyState,
 } from "@/components/admin/ui";
 import {
-  fetchAdminGyms,
-  type AdminGym,
-  type AdminGymSummary,
-  type ListAdminGymsQuery,
+  fetchAdminMembers,
+  memberDisplayName,
+  memberGymName,
+  memberJoinedAt,
+  memberLastCheckIn,
+  memberListStatus,
+  memberPlanName,
+  type AdminMemberDisplayStatus,
+  type AdminMemberListItem,
+  type AdminMemberSummary,
+  type ListAdminMembersQuery,
   type PaginationMeta,
-} from "@/lib/admin-gyms";
+} from "@/lib/admin-members";
 import { ApiError, formatApiError } from "@/lib/api";
 import { clearAdminSession } from "@/lib/admin-auth";
 import {
@@ -27,39 +34,39 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
-  MapPin,
   PauseCircle,
   Search,
   ShieldCheck,
   ShieldOff,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/gyms/")({
+export const Route = createFileRoute("/members/")({
   head: () => ({
     meta: [
-      { title: "Gyms · GymmerzHub Admin" },
+      { title: "Members · GymmerzHub Admin" },
       {
         name: "description",
-        content: "Manage gyms on the GymmerzHub platform.",
+        content: "View and audit members across all GymmerzHub gyms.",
       },
-      { property: "og:title", content: "Gyms · GymmerzHub Admin" },
+      { property: "og:title", content: "Members · GymmerzHub Admin" },
       {
         property: "og:description",
-        content: "Manage gyms on the GymmerzHub platform.",
+        content: "View and audit members across all GymmerzHub gyms.",
       },
     ],
   }),
-  component: GymsPage,
+  component: MembersPage,
 });
 
-type GymStatusFilter = "" | "active" | "suspended" | "inactive";
+type MemberStatusFilter = "" | AdminMemberDisplayStatus;
 
 type Filters = {
   q: string;
-  status: GymStatusFilter;
-  city: string;
-  state: string;
+  status: MemberStatusFilter;
+  gym: string;
+  plan: string;
   joinedFrom: string;
   joinedTo: string;
 };
@@ -67,21 +74,21 @@ type Filters = {
 const EMPTY_FILTERS: Filters = {
   q: "",
   status: "",
-  city: "",
-  state: "",
+  gym: "",
+  plan: "",
   joinedFrom: "",
   joinedTo: "",
 };
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-const DEFAULT_PAGE_SIZE = 20;
+const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
+const DEFAULT_PAGE_SIZE = 10;
 const SEARCH_DEBOUNCE_MS = 350;
 
-const STATUS_OPTIONS: Array<{ value: GymStatusFilter; label: string }> = [
-  { value: "", label: "All" },
+const STATUS_OPTIONS: Array<{ value: MemberStatusFilter; label: string }> = [
+  { value: "", label: "All statuses" },
   { value: "active", label: "Active" },
-  { value: "suspended", label: "Suspended" },
   { value: "inactive", label: "Inactive" },
+  { value: "suspended", label: "Suspended" },
 ];
 
 function formatDate(value: string | null) {
@@ -95,9 +102,14 @@ function formatDate(value: string | null) {
   });
 }
 
-function locationLabel(gym: AdminGym) {
-  const parts = [gym.city, gym.stateCode || gym.state].filter(Boolean);
-  return parts.length ? parts.join(", ") : "—";
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -117,7 +129,6 @@ function useDebouncedValue<T>(value: T, delayMs: number) {
   return debounced;
 }
 
-/** Compact page list with ellipses, e.g. 1 … 4 5 6 … 12 */
 function pageItems(current: number, totalPages: number): Array<number | "ellipsis"> {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -132,42 +143,41 @@ function pageItems(current: number, totalPages: number): Array<number | "ellipsi
   return items;
 }
 
-function GymsPage() {
+function MembersPage() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
-  const [gyms, setGyms] = useState<AdminGym[]>([]);
+  const [members, setMembers] = useState<AdminMemberListItem[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);
-  const [summary, setSummary] = useState<AdminGymSummary | null>(null);
+  const [summary, setSummary] = useState<AdminMemberSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const debouncedQ = useDebouncedValue(filters.q, SEARCH_DEBOUNCE_MS);
-  const debouncedCity = useDebouncedValue(filters.city, SEARCH_DEBOUNCE_MS);
-  const debouncedState = useDebouncedValue(filters.state, SEARCH_DEBOUNCE_MS);
+  const debouncedGym = useDebouncedValue(filters.gym, SEARCH_DEBOUNCE_MS);
+  const debouncedPlan = useDebouncedValue(filters.plan, SEARCH_DEBOUNCE_MS);
 
   const applied = useMemo<Filters>(
     () => ({
       ...filters,
       q: debouncedQ,
-      city: debouncedCity,
-      state: debouncedState,
+      gym: debouncedGym,
+      plan: debouncedPlan,
     }),
-    [filters, debouncedQ, debouncedCity, debouncedState],
+    [filters, debouncedQ, debouncedGym, debouncedPlan],
   );
 
-  // Text filters apply after debounce — jump back to page 1 when they settle.
   useEffect(() => {
     setPage(1);
-  }, [debouncedQ, debouncedCity, debouncedState]);
+  }, [debouncedQ, debouncedGym, debouncedPlan]);
 
-  const query = useMemo<ListAdminGymsQuery>(
+  const query = useMemo<ListAdminMembersQuery>(
     () => ({
       q: applied.q.trim() || undefined,
       status: applied.status || undefined,
-      city: applied.city.trim() || undefined,
-      state: applied.state.trim() || undefined,
+      gym: applied.gym.trim() || undefined,
+      plan: applied.plan.trim() || undefined,
       joinedFrom: applied.joinedFrom || undefined,
       joinedTo: applied.joinedTo || undefined,
       page,
@@ -176,14 +186,10 @@ function GymsPage() {
     [applied, page, pageSize],
   );
 
-  const loadGyms = useCallback(async () => {
-    if (
-      query.joinedFrom &&
-      query.joinedTo &&
-      query.joinedFrom > query.joinedTo
-    ) {
+  const loadMembers = useCallback(async () => {
+    if (query.joinedFrom && query.joinedTo && query.joinedFrom > query.joinedTo) {
       setError("Joined from must be on or before joined to");
-      setGyms([]);
+      setMembers([]);
       setPagination(null);
       setLoading(false);
       return;
@@ -192,8 +198,8 @@ function GymsPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchAdminGyms(query);
-      setGyms(data.gyms);
+      const data = await fetchAdminMembers(query);
+      setMembers(data.members ?? []);
       setPagination(data.pagination);
       setSummary(data.summary);
     } catch (err) {
@@ -203,9 +209,9 @@ function GymsPage() {
         navigate({ to: "/login" });
         return;
       }
-      const message = formatApiError(err, "Could not load gyms");
+      const message = formatApiError(err, "Could not load members");
       setError(message);
-      setGyms([]);
+      setMembers([]);
       setPagination(null);
       toast.error(message);
     } finally {
@@ -214,8 +220,8 @@ function GymsPage() {
   }, [navigate, query]);
 
   useEffect(() => {
-    void loadGyms();
-  }, [loadGyms]);
+    void loadMembers();
+  }, [loadMembers]);
 
   function clearFilters() {
     setFilters(EMPTY_FILTERS);
@@ -234,83 +240,82 @@ function GymsPage() {
 
   const hasActiveFilters = Boolean(
     applied.q.trim() ||
-      applied.status ||
-      applied.city.trim() ||
-      applied.state.trim() ||
-      applied.joinedFrom ||
-      applied.joinedTo,
+    applied.status ||
+    applied.gym.trim() ||
+    applied.plan.trim() ||
+    applied.joinedFrom ||
+    applied.joinedTo,
   );
 
   const rangeStart =
-    pagination && pagination.total > 0
-      ? (pagination.page - 1) * pagination.pageSize + 1
-      : 0;
+    pagination && pagination.total > 0 ? (pagination.page - 1) * pagination.pageSize + 1 : 0;
   const rangeEnd = pagination
     ? Math.min(pagination.page * pagination.pageSize, pagination.total)
     : 0;
+  const totalPages = Math.max(1, pagination?.totalPages ?? 1);
+  const safePage = Math.min(page, totalPages);
+  const pages = pagination ? pageItems(pagination.page, totalPages) : [];
 
-  const pages = pagination ? pageItems(pagination.page, pagination.totalPages) : [];
-  const fmt = (n: number | undefined) =>
-    n == null ? "—" : n.toLocaleString();
+  useEffect(() => {
+    if (page !== safePage) setPage(safePage);
+  }, [page, safePage]);
+
+  const fmt = (n: number | undefined) => (n == null ? "—" : n.toLocaleString());
 
   const stats: Array<{
     label: string;
     hint: string;
     value: string;
-    icon: typeof Building2;
+    icon: typeof Users;
     accent: string;
     iconWrap: string;
     cardGlow: string;
   }> = [
     {
-      label: "All gyms",
-      hint: "On the platform",
+      label: "All members",
+      hint: "Across every gym",
       value: fmt(summary?.total),
-      icon: Building2,
+      icon: Users,
       accent: "text-foreground",
       iconWrap: "bg-panel-2 text-muted-foreground border-border",
       cardGlow: "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.8)]",
     },
     {
       label: "Active",
-      hint: "Open for members",
+      hint: "Training now",
       value: fmt(summary?.active),
       icon: ShieldCheck,
       accent: "text-lime",
       iconWrap: "bg-lime/15 text-lime border-lime/25",
-      cardGlow:
-        "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7),0_0_24px_-10px_rgba(204,255,0,0.18)]",
+      cardGlow: "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7),0_0_24px_-10px_rgba(204,255,0,0.18)]",
+    },
+    {
+      label: "Inactive",
+      hint: "Expired or frozen",
+      value: fmt(summary?.inactive ?? 0),
+      icon: ShieldOff,
+      accent: "text-muted-foreground",
+      iconWrap: "bg-panel-2 text-muted-foreground border-border",
+      cardGlow: "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.8)]",
     },
     {
       label: "Suspended",
-      hint: "Temporarily paused",
+      hint: "Paused by platform",
       value: fmt(summary?.suspended),
       icon: PauseCircle,
       accent: "text-amber-300",
       iconWrap: "bg-amber-500/10 text-amber-300 border-amber-500/25",
-      cardGlow:
-        "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7),0_0_24px_-10px_rgba(251,191,36,0.16)]",
-    },
-    {
-      label: "Inactive",
-      hint: "Not taking members",
-      value: fmt(summary?.inactive),
-      icon: ShieldOff,
-      accent: "text-red-300",
-      iconWrap: "bg-red-500/10 text-red-300 border-red-500/25",
-      cardGlow:
-        "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7),0_0_24px_-10px_rgba(248,113,113,0.14)]",
+      cardGlow: "shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7),0_0_24px_-10px_rgba(251,191,36,0.16)]",
     },
   ];
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Gyms"
-        subtitle="See who’s on GymmerzHub, how they’re doing, and who’s running each spot."
+        title="Members"
+        subtitle="See who’s training across GymmerzHub — which gym, which plan, and who’s still active."
       />
 
-      {/* Stats — separate floating cards */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -329,9 +334,7 @@ function GymsPage() {
                   >
                     {stat.value}
                   </div>
-                  <div className="mt-1 text-[11px] text-muted-foreground">
-                    {stat.hint}
-                  </div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">{stat.hint}</div>
                 </div>
                 <span
                   className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg border shadow-inner ${stat.iconWrap}`}
@@ -344,14 +347,19 @@ function GymsPage() {
         })}
       </div>
 
-      {/* Filters */}
       <Panel className="border-border/70 bg-panel-2/40 shadow-[0_6px_20px_-10px_rgba(0,0,0,0.55)] ring-1 ring-inset ring-white/[0.03]">
         <div className="space-y-5 p-5">
           <div className="flex items-center justify-between gap-3">
             <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Filters
             </div>
+            {hasActiveFilters && (
+              <Button type="button" size="sm" variant="ghost" onClick={clearFilters}>
+                Clear filters
+              </Button>
+            )}
           </div>
+
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="min-w-0 flex-1">
               <FieldLabel>Search</FieldLabel>
@@ -360,7 +368,7 @@ function GymsPage() {
                 <Input
                   value={filters.q}
                   onChange={(e) => patchFilter("q", e.target.value)}
-                  placeholder="Search by gym name, slug, city, or address"
+                  placeholder="Search by name, email, or phone"
                   className="h-11 w-full rounded-lg pl-10 text-[15px]"
                 />
               </div>
@@ -369,42 +377,41 @@ function GymsPage() {
               <FieldLabel>Status</FieldLabel>
               <Select
                 value={filters.status}
-                onChange={(e) =>
-                  patchFilter("status", e.target.value as GymStatusFilter)
-                }
+                onChange={(e) => patchFilter("status", e.target.value as MemberStatusFilter)}
                 className="h-11 w-full rounded-lg"
                 aria-label="Filter by status"
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt.label} value={opt.value}>
-                    {opt.value ? opt.label : "All statuses"}
+                    {opt.label}
                   </option>
                 ))}
               </Select>
             </div>
+            <div className="w-full shrink-0 sm:w-44">
+              <FieldLabel>Plan</FieldLabel>
+              <Input
+                value={filters.plan}
+                onChange={(e) => patchFilter("plan", e.target.value)}
+                placeholder="e.g. Quarterly"
+                className="h-11 w-full rounded-lg"
+                aria-label="Filter by plan name"
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <div>
               <FieldLabel>
                 <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="h-3 w-3" />
-                  City
+                  <Building2 className="h-3 w-3" />
+                  Gym
                 </span>
               </FieldLabel>
               <Input
-                value={filters.city}
-                onChange={(e) => patchFilter("city", e.target.value)}
-                placeholder="e.g. Mumbai"
-                className="w-full"
-              />
-            </div>
-            <div>
-              <FieldLabel>State</FieldLabel>
-              <Input
-                value={filters.state}
-                onChange={(e) => patchFilter("state", e.target.value)}
-                placeholder="e.g. MH / Maharashtra"
+                value={filters.gym}
+                onChange={(e) => patchFilter("gym", e.target.value)}
+                placeholder="e.g. Ironline"
                 className="w-full"
               />
             </div>
@@ -440,34 +447,31 @@ function GymsPage() {
           {loading && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-panel/75 backdrop-blur-[1px]">
               <div className="flex flex-col items-center gap-3">
-                <Loader2
-                  className="h-9 w-9 animate-spin text-lime"
-                  aria-label="Loading gyms"
-                />
-                <div className="text-xs text-muted-foreground">Loading gyms…</div>
+                <Loader2 className="h-9 w-9 animate-spin text-lime" aria-label="Loading members" />
+                <div className="text-xs text-muted-foreground">Loading members…</div>
               </div>
             </div>
           )}
 
           {!loading && error && (
             <EmptyState
-              title="Couldn’t load gyms"
+              title="Couldn’t load members"
               hint={error}
               action={
-                <Button size="sm" variant="secondary" onClick={() => void loadGyms()}>
+                <Button size="sm" variant="secondary" onClick={() => void loadMembers()}>
                   Retry
                 </Button>
               }
             />
           )}
 
-          {!loading && !error && gyms.length === 0 && (
+          {!loading && !error && members.length === 0 && (
             <EmptyState
-              title="No gyms found"
+              title="No members found"
               hint={
                 hasActiveFilters
                   ? "Try clearing filters or broadening your search."
-                  : "Gyms appear here after owners register a workspace."
+                  : "Members appear here after they join a gym."
               }
               action={
                 hasActiveFilters ? (
@@ -479,57 +483,46 @@ function GymsPage() {
             />
           )}
 
-          {!error && gyms.length > 0 && (
-            <Table
-              head={[
-                "Gym",
-                "Location",
-                "Owner",
-                "Members",
-                "Active",
-                "Status",
-                "Joined",
-              ]}
-            >
-              {gyms.map((g) => (
-                <Tr key={g.id}>
-                  <Td>
-                    <Link
-                      to="/gyms/$id"
-                      params={{ id: g.id }}
-                      className="font-medium transition-colors hover:text-lime"
-                    >
-                      {g.name}
-                    </Link>
-                    <div className="mt-0.5 font-mono text-[11px] text-muted-foreground">
-                      {g.slug}
-                    </div>
-                  </Td>
-                  <Td className="text-muted-foreground">{locationLabel(g)}</Td>
-                  <Td>
-                    {g.owner ? (
-                      <div>
-                        <div className="font-medium">{g.owner.fullName}</div>
-                        <div className="mt-0.5 text-[11px] text-muted-foreground">
-                          {g.owner.email}
-                        </div>
+          {!error && members.length > 0 && (
+            <Table head={["Member", "Contact", "Gym", "Plan", "Status", "Joined", "Last check-in"]}>
+              {members.map((m) => {
+                const name = memberDisplayName(m);
+                return (
+                  <Tr key={m.id}>
+                    <Td>
+                      <div className="flex items-center gap-3">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-border bg-panel-2 text-[11px] font-semibold text-muted-foreground">
+                          {initials(name === "—" ? "?" : name)}
+                        </span>
+                        <Link
+                          to="/members/$id"
+                          params={{ id: m.id }}
+                          className="font-medium transition-colors hover:text-lime"
+                        >
+                          {name}
+                        </Link>
                       </div>
-                    ) : (
-                      <span className="text-muted-foreground">—</span>
-                    )}
-                  </Td>
-                  <Td className="tabular-nums font-medium">{g.memberCount}</Td>
-                  <Td className="tabular-nums text-muted-foreground">
-                    {g.activeMemberCount}
-                  </Td>
-                  <Td>
-                    <StatusBadge status={g.status} />
-                  </Td>
-                  <Td className="text-xs text-muted-foreground">
-                    {formatDate(g.joinedAt || g.createdAt)}
-                  </Td>
-                </Tr>
-              ))}
+                    </Td>
+                    <Td>
+                      <div className="text-xs text-muted-foreground">{m.email || "—"}</div>
+                      <div className="mt-0.5 text-[11px] text-muted-foreground">
+                        {m.phone || "—"}
+                      </div>
+                    </Td>
+                    <Td className="font-medium">{memberGymName(m)}</Td>
+                    <Td className="text-muted-foreground">{memberPlanName(m)}</Td>
+                    <Td>
+                      <StatusBadge status={memberListStatus(m)} />
+                    </Td>
+                    <Td className="text-xs text-muted-foreground">
+                      {formatDate(memberJoinedAt(m))}
+                    </Td>
+                    <Td className="text-xs text-muted-foreground">
+                      {formatDate(memberLastCheckIn(m))}
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Table>
           )}
         </div>
@@ -558,8 +551,7 @@ function GymsPage() {
                 <span className="font-medium text-foreground">
                   {rangeStart}–{rangeEnd}
                 </span>{" "}
-                of{" "}
-                <span className="font-medium text-foreground">{pagination.total}</span>
+                of <span className="font-medium text-foreground">{pagination.total}</span>
               </div>
             </div>
 
@@ -575,7 +567,7 @@ function GymsPage() {
                 Prev
               </Button>
 
-              {pagination.totalPages > 1 ? (
+              {totalPages > 1 ? (
                 <div className="flex items-center gap-1">
                   {pages.map((item, idx) =>
                     item === "ellipsis" ? (
@@ -590,11 +582,11 @@ function GymsPage() {
                       <button
                         key={item}
                         type="button"
-                        disabled={loading}
                         onClick={() => setPage(item)}
                         aria-label={`Page ${item}`}
                         aria-current={item === pagination.page ? "page" : undefined}
-                        className={`inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-md px-2 text-xs font-medium tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                        disabled={loading}
+                        className={`inline-flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-md px-2 text-xs font-medium tabular-nums transition-colors ${
                           item === pagination.page
                             ? "bg-lime text-lime-foreground"
                             : "border border-border bg-panel-2 text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -607,7 +599,7 @@ function GymsPage() {
                 </div>
               ) : (
                 <div className="min-w-[5.5rem] text-center text-xs font-medium tabular-nums text-muted-foreground">
-                  Page {pagination.page} of {pagination.totalPages}
+                  Page {pagination.page} of {totalPages}
                 </div>
               )}
 
@@ -628,4 +620,3 @@ function GymsPage() {
     </div>
   );
 }
-

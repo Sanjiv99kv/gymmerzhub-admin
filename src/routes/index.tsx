@@ -71,8 +71,8 @@ function Dashboard() {
   const verifiedGyms = gyms.filter((g) => g.status === "Verified").length;
   const pendingGyms = gyms.filter((g) => g.status === "Pending").length;
   const suspendedGyms = gyms.filter((g) => g.status === "Suspended").length;
-  const activeMembers = members.filter((m) => m.subStatus === "Active").length;
-  const pastDue = members.filter((m) => m.subStatus === "Past Due").length;
+  const activeMembers = members.filter((m) => m.status === "active").length;
+  const pastDue = members.filter((m) => m.status === "suspended").length;
   const pendingJoins = joinRequests.filter((j) => j.status === "Pending").length;
   const flaggedPlans = aiPlans.filter((p) =>
     ["Flagged", "Hidden"].includes(p.status),
@@ -81,7 +81,7 @@ function Dashboard() {
     .filter((p) => p.status === "Pending")
     .reduce((sum, p) => sum + p.amount, 0);
   const pendingPayoutCount = payouts.filter((p) => p.status === "Pending").length;
-  const mrr = members.filter((m) => m.subStatus === "Active").length * 3;
+  const mrr = activeMembers * 3;
   const topGyms = [...revenueShare].sort((a, b) => b.share - a.share).slice(0, 5);
   const chartTotal = chartData.reduce((s, d) => s + d.value, 0);
   const chartPrev = chartData.slice(0, 15).reduce((s, d) => s + d.value, 0);
@@ -169,7 +169,7 @@ function Dashboard() {
         <StatCard
           label="Active members"
           value={activeMembers.toLocaleString()}
-          delta={`+${members.filter((m) => m.subStatus === "Trialing").length} trial`}
+          delta={`${members.filter((m) => m.status === "inactive").length} inactive`}
           hint={`${members.length} total accounts on platform`}
         />
         <StatCard
@@ -388,22 +388,22 @@ function Dashboard() {
           {[
             {
               label: "Active",
-              value: members.filter((m) => m.subStatus === "Active").length,
+              value: activeMembers,
               tone: "success" as const,
             },
             {
-              label: "Trialing",
-              value: members.filter((m) => m.subStatus === "Trialing").length,
+              label: "Inactive",
+              value: members.filter((m) => m.status === "inactive").length,
               tone: "info" as const,
             },
             {
-              label: "Past due",
+              label: "Suspended",
               value: pastDue,
               tone: "warn" as const,
             },
             {
-              label: "Canceled",
-              value: members.filter((m) => m.subStatus === "Canceled").length,
+              label: "Total",
+              value: members.length,
               tone: "danger" as const,
             },
           ].map((item) => (

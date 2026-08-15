@@ -9,17 +9,45 @@ export const gyms = [
   { id: "gy_08", name: "Coast Barbell Society", city: "San Diego, CA", owner: "Jordan Kim", members: 74, status: "Pending", revenueDue: 0, created: "2026-07-01" },
 ];
 
-export const members = [
-  { id: "m_01", name: "Aiden Walsh", email: "aiden.w@mail.com", gym: "Ironline Fitness", gymStatus: "Verified", subStatus: "Active", joined: "2026-05-12" },
-  { id: "m_02", name: "Bella Chen", email: "bella.chen@mail.com", gym: "Peak Strength Club", gymStatus: "Verified", subStatus: "Active", joined: "2026-04-08" },
-  { id: "m_03", name: "Chris Okafor", email: "c.okafor@mail.com", gym: "Kinetic Athletics", gymStatus: "Pending", subStatus: "Trialing", joined: "2026-07-19" },
-  { id: "m_04", name: "Dana Petrov", email: "d.petrov@mail.com", gym: "Forge Fitness Co.", gymStatus: "Verified", subStatus: "Active", joined: "2026-02-14" },
-  { id: "m_05", name: "Eli Rodriguez", email: "eli.r@mail.com", gym: "Titan Powerhouse", gymStatus: "Expired", subStatus: "Canceled", joined: "2025-12-01" },
-  { id: "m_06", name: "Farah Nasser", email: "farah.n@mail.com", gym: "Zenith Gym", gymStatus: "Verified", subStatus: "Active", joined: "2026-06-30" },
-  { id: "m_07", name: "Gabe Sullivan", email: "gabe.s@mail.com", gym: "Nordic Barbell", gymStatus: "Pending", subStatus: "Trialing", joined: "2026-07-22" },
-  { id: "m_08", name: "Hana Ito", email: "hana.ito@mail.com", gym: "Ironline Fitness", gymStatus: "Verified", subStatus: "Active", joined: "2026-01-19" },
-  { id: "m_09", name: "Ilya Volkov", email: "ilya.v@mail.com", gym: "Peak Strength Club", gymStatus: "Verified", subStatus: "Past Due", joined: "2025-11-04" },
-  { id: "m_10", name: "Jules Marchetti", email: "jules.m@mail.com", gym: "Coast Barbell Society", gymStatus: "Pending", subStatus: "Trialing", joined: "2026-07-25" },
+export type MockMember = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  gym: string;
+  gymId: string;
+  plan: string;
+  status: "active" | "inactive" | "suspended";
+  joined: string;
+  lastCheckIn: string | null;
+};
+
+/** Platform-wide members list demo (UI until API is wired). */
+export const members: MockMember[] = [
+  { id: "m_01", name: "Aiden Walsh", email: "aiden.w@mail.com", phone: "+91 98111 22001", gym: "Ironline Fitness", gymId: "gy_01", plan: "Quarterly", status: "active", joined: "2026-05-12", lastCheckIn: "2026-08-15" },
+  { id: "m_02", name: "Bella Chen", email: "bella.chen@mail.com", phone: "+91 98111 22002", gym: "Peak Strength Club", gymId: "gy_02", plan: "Annual", status: "active", joined: "2026-04-08", lastCheckIn: "2026-08-14" },
+  { id: "m_03", name: "Chris Okafor", email: "c.okafor@mail.com", phone: "+91 98111 22003", gym: "Kinetic Athletics", gymId: "gy_04", plan: "Monthly", status: "active", joined: "2026-07-19", lastCheckIn: "2026-08-15" },
+  { id: "m_04", name: "Dana Petrov", email: "d.petrov@mail.com", phone: "+91 98111 22004", gym: "Forge Fitness Co.", gymId: "gy_07", plan: "Quarterly", status: "active", joined: "2026-02-14", lastCheckIn: "2026-08-12" },
+  { id: "m_05", name: "Eli Rodriguez", email: "eli.r@mail.com", phone: "+91 98111 22005", gym: "Titan Powerhouse", gymId: "gy_05", plan: "Monthly", status: "inactive", joined: "2025-12-01", lastCheckIn: "2026-03-18" },
+  { id: "m_06", name: "Farah Nasser", email: "farah.n@mail.com", phone: "+91 98111 22006", gym: "Zenith Gym", gymId: "gy_06", plan: "Half yearly", status: "active", joined: "2026-06-30", lastCheckIn: "2026-08-13" },
+  { id: "m_07", name: "Gabe Sullivan", email: "gabe.s@mail.com", phone: "+91 98111 22007", gym: "Nordic Barbell", gymId: "gy_03", plan: "Monthly", status: "active", joined: "2026-07-22", lastCheckIn: "2026-08-11" },
+  { id: "m_08", name: "Hana Ito", email: "hana.ito@mail.com", phone: "+91 98111 22008", gym: "Ironline Fitness", gymId: "gy_01", plan: "Annual", status: "active", joined: "2026-01-19", lastCheckIn: "2026-08-15" },
+  { id: "m_09", name: "Ilya Volkov", email: "ilya.v@mail.com", phone: "+91 98111 22009", gym: "Peak Strength Club", gymId: "gy_02", plan: "Quarterly", status: "suspended", joined: "2025-11-04", lastCheckIn: "2026-06-02" },
+  { id: "m_10", name: "Jules Marchetti", email: "jules.m@mail.com", phone: "+91 98111 22010", gym: "Coast Barbell Society", gymId: "gy_08", plan: "Monthly", status: "active", joined: "2026-07-25", lastCheckIn: "2026-08-14" },
+  { id: "m_11", name: "Riya Kapoor", email: "riya.k@mail.com", phone: "+91 98111 22011", gym: "Ironline Fitness", gymId: "gy_01", plan: "Monthly", status: "active", joined: "2026-06-02", lastCheckIn: "2026-08-15" },
+  { id: "m_12", name: "Dev Sharma", email: "dev.s@mail.com", phone: "+91 98111 22012", gym: "Kinetic Athletics", gymId: "gy_04", plan: "Monthly", status: "inactive", joined: "2025-11-08", lastCheckIn: "2026-05-30" },
+  { id: "m_13", name: "Sara Ali", email: "sara.ali@mail.com", phone: "+91 98111 22013", gym: "Zenith Gym", gymId: "gy_06", plan: "Quarterly", status: "active", joined: "2026-03-21", lastCheckIn: "2026-08-13" },
+  { id: "m_14", name: "Noah Brooks", email: "noah.b@mail.com", phone: "+91 98111 22014", gym: "Titan Powerhouse", gymId: "gy_05", plan: "Monthly", status: "suspended", joined: "2026-02-14", lastCheckIn: "2026-07-02" },
+  { id: "m_15", name: "Ishita Rao", email: "ishita.r@mail.com", phone: "+91 98111 22015", gym: "Forge Fitness Co.", gymId: "gy_07", plan: "Annual", status: "active", joined: "2025-12-04", lastCheckIn: "2026-08-15" },
+  { id: "m_16", name: "Vikram Nair", email: "vikram.n@mail.com", phone: "+91 98111 22016", gym: "Peak Strength Club", gymId: "gy_02", plan: "Quarterly", status: "active", joined: "2026-04-17", lastCheckIn: "2026-08-12" },
+  { id: "m_17", name: "Ananya Joshi", email: "ananya.j@mail.com", phone: "+91 98111 22017", gym: "Nordic Barbell", gymId: "gy_03", plan: "Monthly", status: "active", joined: "2026-07-01", lastCheckIn: "2026-08-15" },
+  { id: "m_18", name: "Rohan Mehta", email: "rohan.m@mail.com", phone: "+91 98111 22018", gym: "Coast Barbell Society", gymId: "gy_08", plan: "Half yearly", status: "active", joined: "2026-02-28", lastCheckIn: "2026-08-10" },
+  { id: "m_19", name: "Priya Shah", email: "priya.s@mail.com", phone: "+91 98111 22019", gym: "Ironline Fitness", gymId: "gy_01", plan: "Quarterly", status: "inactive", joined: "2025-09-14", lastCheckIn: "2026-04-02" },
+  { id: "m_20", name: "Kabir Patel", email: "kabir.p@mail.com", phone: "+91 98111 22020", gym: "Kinetic Athletics", gymId: "gy_04", plan: "Annual", status: "active", joined: "2026-01-05", lastCheckIn: "2026-08-14" },
+  { id: "m_21", name: "Meera Iyer", email: "meera.i@mail.com", phone: "+91 98111 22021", gym: "Zenith Gym", gymId: "gy_06", plan: "Monthly", status: "active", joined: "2026-06-18", lastCheckIn: "2026-08-15" },
+  { id: "m_22", name: "Arjun Reddy", email: "arjun.r@mail.com", phone: "+91 98111 22022", gym: "Forge Fitness Co.", gymId: "gy_07", plan: "Quarterly", status: "suspended", joined: "2025-10-22", lastCheckIn: "2026-06-11" },
+  { id: "m_23", name: "Zara Khan", email: "zara.k@mail.com", phone: "+91 98111 22023", gym: "Peak Strength Club", gymId: "gy_02", plan: "Half yearly", status: "active", joined: "2026-03-09", lastCheckIn: "2026-08-13" },
+  { id: "m_24", name: "Leo Fernandes", email: "leo.f@mail.com", phone: "+91 98111 22024", gym: "Nordic Barbell", gymId: "gy_03", plan: "Monthly", status: "active", joined: "2026-05-27", lastCheckIn: null },
 ];
 
 export const joinRequests = [
@@ -71,7 +99,12 @@ export const subscriptions = members.slice(0, 10).map((m, i) => ({
   member: m.name,
   email: m.email,
   gym: m.gym,
-  status: m.subStatus,
+  status:
+    m.status === "active"
+      ? "Active"
+      : m.status === "suspended"
+        ? "Past Due"
+        : "Canceled",
   amount: 3,
   nextBilling: "2026-08-05",
   started: m.joined,

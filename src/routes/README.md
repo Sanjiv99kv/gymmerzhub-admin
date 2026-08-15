@@ -10,6 +10,9 @@ The only root layout is `src/routes/__root.tsx`.
 | --- | --- |
 | `index.tsx` | `/` |
 | `login.tsx` | `/login` |
+| `members.tsx` | `/members` layout (`<Outlet />`) |
+| `members.index.tsx` | `/members/` |
+| `members.$id.tsx` | `/members/:id` |
 | `gyms.index.tsx` | `/gyms/` |
 | `gyms.$id.tsx` | `/gyms/:id` |
 | `__root.tsx` | app shell — wraps every page; preserve `<Outlet />` |

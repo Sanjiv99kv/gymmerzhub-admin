@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { ChevronDown, MoreHorizontal } from "lucide-react";
 
 export function PageHeader({
   title, subtitle, breadcrumb, actions,
@@ -37,9 +37,9 @@ export function Badge({ tone = "muted", children }: { tone?: BadgeTone; children
 export function StatusBadge({ status }: { status: string }) {
   const s = status.toLowerCase();
   const tone: BadgeTone =
-    ["active", "verified", "paid", "approved", "published"].includes(s) ? "success"
-    : ["pending", "trialing", "past_due", "past due", "flagged"].includes(s) ? "warn"
-    : ["suspended", "failed", "canceled", "rejected", "hidden", "inactive", "expired"].includes(s) ? "danger"
+    ["active", "verified", "paid", "approved", "published", "completed"].includes(s) ? "success"
+    : ["pending", "trialing", "past_due", "past due", "flagged", "paused", "open"].includes(s) ? "warn"
+    : ["suspended", "failed", "canceled", "rejected", "hidden", "inactive", "expired", "frozen", "abandoned", "ended"].includes(s) ? "danger"
     : "muted";
   return <Badge tone={tone}>{status.replace("_", " ")}</Badge>;
 }
@@ -140,29 +140,42 @@ export function EmptyState({ title, hint, action }: { title: string; hint?: stri
 
 export function Tabs({ tabs, active, onChange }: { tabs: string[]; active: string; onChange: (t: string) => void }) {
   return (
-    <div className="flex items-center gap-1 border-b border-border">
-      {tabs.map((t) => (
-        <button
-          key={t}
-          onClick={() => onChange(t)}
-          className={`relative cursor-pointer px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
-            active === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {t}
-          {active === t && <span className="absolute left-2 right-2 -bottom-px h-[2px] bg-lime" />}
-        </button>
-      ))}
+    <div className="-mx-1 overflow-x-auto">
+      <div className="flex min-w-max items-center gap-1 border-b border-border px-1">
+        {tabs.map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => onChange(t)}
+            className={`relative cursor-pointer px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
+              active === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {t}
+            {active === t && <span className="absolute left-2 right-2 -bottom-px h-[2px] bg-lime" />}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-export function Select({ children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+export function Select({ children, className, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+  const classes = className ?? "";
+  const hasHeight = /\bh-\S+/.test(classes);
+  // Width/height live on the wrapper so the custom chevron stays aligned to the control.
   return (
-    <select
-      {...props}
-      className="h-9 cursor-pointer rounded-md border border-border bg-panel-2 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-lime disabled:cursor-not-allowed"
-    >{children}</select>
+    <span
+      className={`relative inline-flex items-center ${hasHeight ? "" : "h-9"} ${classes}`}
+    >
+      <select
+        {...props}
+        className="h-full w-full cursor-pointer appearance-none rounded-md border border-border bg-panel-2 py-0 pl-3 pr-10 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-lime disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {children}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    </span>
   );
 }
 

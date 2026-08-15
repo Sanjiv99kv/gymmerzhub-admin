@@ -26,6 +26,8 @@ import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as WorkoutsRouteImport } from './routes/workouts'
 import { Route as GymsIndexRouteImport } from './routes/gyms.index'
 import { Route as GymsIdRouteImport } from './routes/gyms.$id'
+import { Route as MembersIndexRouteImport } from './routes/members.index'
+import { Route as MembersIdRouteImport } from './routes/members.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -112,6 +114,16 @@ const GymsIdRoute = GymsIdRouteImport.update({
   path: '/gyms/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MembersIndexRoute = MembersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MembersRoute,
+} as any)
+const MembersIdRoute = MembersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MembersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -122,7 +134,7 @@ export interface FileRoutesByFullPath {
   '/exercises': typeof ExercisesRoute
   '/join-requests': typeof JoinRequestsRoute
   '/login': typeof LoginRoute
-  '/members': typeof MembersRoute
+  '/members': typeof MembersRouteWithChildren
   '/payouts': typeof PayoutsRoute
   '/profile': typeof ProfileRoute
   '/revenue-share': typeof RevenueShareRoute
@@ -130,7 +142,9 @@ export interface FileRoutesByFullPath {
   '/subscriptions': typeof SubscriptionsRoute
   '/workouts': typeof WorkoutsRoute
   '/gyms/$id': typeof GymsIdRoute
+  '/members/$id': typeof MembersIdRoute
   '/gyms/': typeof GymsIndexRoute
+  '/members/': typeof MembersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,7 +155,6 @@ export interface FileRoutesByTo {
   '/exercises': typeof ExercisesRoute
   '/join-requests': typeof JoinRequestsRoute
   '/login': typeof LoginRoute
-  '/members': typeof MembersRoute
   '/payouts': typeof PayoutsRoute
   '/profile': typeof ProfileRoute
   '/revenue-share': typeof RevenueShareRoute
@@ -149,7 +162,9 @@ export interface FileRoutesByTo {
   '/subscriptions': typeof SubscriptionsRoute
   '/workouts': typeof WorkoutsRoute
   '/gyms/$id': typeof GymsIdRoute
+  '/members/$id': typeof MembersIdRoute
   '/gyms': typeof GymsIndexRoute
+  '/members': typeof MembersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,7 +176,7 @@ export interface FileRoutesById {
   '/exercises': typeof ExercisesRoute
   '/join-requests': typeof JoinRequestsRoute
   '/login': typeof LoginRoute
-  '/members': typeof MembersRoute
+  '/members': typeof MembersRouteWithChildren
   '/payouts': typeof PayoutsRoute
   '/profile': typeof ProfileRoute
   '/revenue-share': typeof RevenueShareRoute
@@ -169,7 +184,9 @@ export interface FileRoutesById {
   '/subscriptions': typeof SubscriptionsRoute
   '/workouts': typeof WorkoutsRoute
   '/gyms/$id': typeof GymsIdRoute
+  '/members/$id': typeof MembersIdRoute
   '/gyms/': typeof GymsIndexRoute
+  '/members/': typeof MembersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,7 +207,9 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/workouts'
     | '/gyms/$id'
+    | '/members/$id'
     | '/gyms/'
+    | '/members/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -201,7 +220,6 @@ export interface FileRouteTypes {
     | '/exercises'
     | '/join-requests'
     | '/login'
-    | '/members'
     | '/payouts'
     | '/profile'
     | '/revenue-share'
@@ -209,7 +227,9 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/workouts'
     | '/gyms/$id'
+    | '/members/$id'
     | '/gyms'
+    | '/members'
   id:
     | '__root__'
     | '/'
@@ -228,7 +248,9 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/workouts'
     | '/gyms/$id'
+    | '/members/$id'
     | '/gyms/'
+    | '/members/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -240,7 +262,7 @@ export interface RootRouteChildren {
   ExercisesRoute: typeof ExercisesRoute
   JoinRequestsRoute: typeof JoinRequestsRoute
   LoginRoute: typeof LoginRoute
-  MembersRoute: typeof MembersRoute
+  MembersRoute: typeof MembersRouteWithChildren
   PayoutsRoute: typeof PayoutsRoute
   ProfileRoute: typeof ProfileRoute
   RevenueShareRoute: typeof RevenueShareRoute
@@ -372,8 +394,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GymsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/members/': {
+      id: '/members/'
+      path: '/'
+      fullPath: '/members/'
+      preLoaderRoute: typeof MembersIndexRouteImport
+      parentRoute: typeof MembersRoute
+    }
+    '/members/$id': {
+      id: '/members/$id'
+      path: '/$id'
+      fullPath: '/members/$id'
+      preLoaderRoute: typeof MembersIdRouteImport
+      parentRoute: typeof MembersRoute
+    }
   }
 }
+
+interface MembersRouteChildren {
+  MembersIdRoute: typeof MembersIdRoute
+  MembersIndexRoute: typeof MembersIndexRoute
+}
+
+const MembersRouteChildren: MembersRouteChildren = {
+  MembersIdRoute: MembersIdRoute,
+  MembersIndexRoute: MembersIndexRoute,
+}
+
+const MembersRouteWithChildren =
+  MembersRoute._addFileChildren(MembersRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -384,7 +433,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExercisesRoute: ExercisesRoute,
   JoinRequestsRoute: JoinRequestsRoute,
   LoginRoute: LoginRoute,
-  MembersRoute: MembersRoute,
+  MembersRoute: MembersRouteWithChildren,
   PayoutsRoute: PayoutsRoute,
   ProfileRoute: ProfileRoute,
   RevenueShareRoute: RevenueShareRoute,
