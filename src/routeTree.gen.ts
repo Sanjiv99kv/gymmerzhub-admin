@@ -15,6 +15,7 @@ import { Route as AiPlansRouteImport } from './routes/ai-plans'
 import { Route as AuditLogsRouteImport } from './routes/audit-logs'
 import { Route as DietsRouteImport } from './routes/diets'
 import { Route as ExercisesRouteImport } from './routes/exercises'
+import { Route as FoodItemsRouteImport } from './routes/food-items'
 import { Route as JoinRequestsRouteImport } from './routes/join-requests'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MembersRouteImport } from './routes/members'
@@ -24,10 +25,22 @@ import { Route as RevenueShareRouteImport } from './routes/revenue-share'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as WorkoutsRouteImport } from './routes/workouts'
+import { Route as DietsIndexRouteImport } from './routes/diets.index'
+import { Route as DietsIdRouteImport } from './routes/diets.$id'
+import { Route as DietsNewRouteImport } from './routes/diets.new'
 import { Route as GymsIndexRouteImport } from './routes/gyms.index'
 import { Route as GymsIdRouteImport } from './routes/gyms.$id'
 import { Route as MembersIndexRouteImport } from './routes/members.index'
 import { Route as MembersIdRouteImport } from './routes/members.$id'
+import { Route as WorkoutsIndexRouteImport } from './routes/workouts.index'
+import { Route as WorkoutsIdRouteImport } from './routes/workouts.$id'
+import { Route as WorkoutsNewRouteImport } from './routes/workouts.new'
+import { Route as DietsIdIndexRouteImport } from './routes/diets.$id.index'
+import { Route as DietsIdEditRouteImport } from './routes/diets.$id.edit'
+import { Route as DietsIdMembersRouteImport } from './routes/diets.$id.members'
+import { Route as WorkoutsIdIndexRouteImport } from './routes/workouts.$id.index'
+import { Route as WorkoutsIdEditRouteImport } from './routes/workouts.$id.edit'
+import { Route as WorkoutsIdMembersRouteImport } from './routes/workouts.$id.members'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -57,6 +70,11 @@ const DietsRoute = DietsRouteImport.update({
 const ExercisesRoute = ExercisesRouteImport.update({
   id: '/exercises',
   path: '/exercises',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FoodItemsRoute = FoodItemsRouteImport.update({
+  id: '/food-items',
+  path: '/food-items',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JoinRequestsRoute = JoinRequestsRouteImport.update({
@@ -104,6 +122,21 @@ const WorkoutsRoute = WorkoutsRouteImport.update({
   path: '/workouts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DietsIndexRoute = DietsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DietsRoute,
+} as any)
+const DietsIdRoute = DietsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DietsRoute,
+} as any)
+const DietsNewRoute = DietsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => DietsRoute,
+} as any)
 const GymsIndexRoute = GymsIndexRouteImport.update({
   id: '/gyms/',
   path: '/gyms/',
@@ -124,14 +157,60 @@ const MembersIdRoute = MembersIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => MembersRoute,
 } as any)
+const WorkoutsIndexRoute = WorkoutsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkoutsRoute,
+} as any)
+const WorkoutsIdRoute = WorkoutsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => WorkoutsRoute,
+} as any)
+const WorkoutsNewRoute = WorkoutsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => WorkoutsRoute,
+} as any)
+const DietsIdIndexRoute = DietsIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DietsIdRoute,
+} as any)
+const DietsIdEditRoute = DietsIdEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => DietsIdRoute,
+} as any)
+const DietsIdMembersRoute = DietsIdMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => DietsIdRoute,
+} as any)
+const WorkoutsIdIndexRoute = WorkoutsIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkoutsIdRoute,
+} as any)
+const WorkoutsIdEditRoute = WorkoutsIdEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => WorkoutsIdRoute,
+} as any)
+const WorkoutsIdMembersRoute = WorkoutsIdMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => WorkoutsIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admins': typeof AdminsRoute
   '/ai-plans': typeof AiPlansRoute
   '/audit-logs': typeof AuditLogsRoute
-  '/diets': typeof DietsRoute
+  '/diets': typeof DietsRouteWithChildren
   '/exercises': typeof ExercisesRoute
+  '/food-items': typeof FoodItemsRoute
   '/join-requests': typeof JoinRequestsRoute
   '/login': typeof LoginRoute
   '/members': typeof MembersRouteWithChildren
@@ -140,19 +219,31 @@ export interface FileRoutesByFullPath {
   '/revenue-share': typeof RevenueShareRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
-  '/workouts': typeof WorkoutsRoute
+  '/workouts': typeof WorkoutsRouteWithChildren
+  '/diets/$id': typeof DietsIdRouteWithChildren
+  '/diets/new': typeof DietsNewRoute
   '/gyms/$id': typeof GymsIdRoute
   '/members/$id': typeof MembersIdRoute
+  '/workouts/$id': typeof WorkoutsIdRouteWithChildren
+  '/workouts/new': typeof WorkoutsNewRoute
+  '/diets/': typeof DietsIndexRoute
   '/gyms/': typeof GymsIndexRoute
   '/members/': typeof MembersIndexRoute
+  '/workouts/': typeof WorkoutsIndexRoute
+  '/diets/$id/edit': typeof DietsIdEditRoute
+  '/diets/$id/members': typeof DietsIdMembersRoute
+  '/workouts/$id/edit': typeof WorkoutsIdEditRoute
+  '/workouts/$id/members': typeof WorkoutsIdMembersRoute
+  '/diets/$id/': typeof DietsIdIndexRoute
+  '/workouts/$id/': typeof WorkoutsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admins': typeof AdminsRoute
   '/ai-plans': typeof AiPlansRoute
   '/audit-logs': typeof AuditLogsRoute
-  '/diets': typeof DietsRoute
   '/exercises': typeof ExercisesRoute
+  '/food-items': typeof FoodItemsRoute
   '/join-requests': typeof JoinRequestsRoute
   '/login': typeof LoginRoute
   '/payouts': typeof PayoutsRoute
@@ -160,11 +251,20 @@ export interface FileRoutesByTo {
   '/revenue-share': typeof RevenueShareRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
-  '/workouts': typeof WorkoutsRoute
+  '/diets/new': typeof DietsNewRoute
   '/gyms/$id': typeof GymsIdRoute
   '/members/$id': typeof MembersIdRoute
+  '/workouts/new': typeof WorkoutsNewRoute
+  '/diets': typeof DietsIndexRoute
   '/gyms': typeof GymsIndexRoute
   '/members': typeof MembersIndexRoute
+  '/workouts': typeof WorkoutsIndexRoute
+  '/diets/$id/edit': typeof DietsIdEditRoute
+  '/diets/$id/members': typeof DietsIdMembersRoute
+  '/workouts/$id/edit': typeof WorkoutsIdEditRoute
+  '/workouts/$id/members': typeof WorkoutsIdMembersRoute
+  '/diets/$id': typeof DietsIdIndexRoute
+  '/workouts/$id': typeof WorkoutsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -172,8 +272,9 @@ export interface FileRoutesById {
   '/admins': typeof AdminsRoute
   '/ai-plans': typeof AiPlansRoute
   '/audit-logs': typeof AuditLogsRoute
-  '/diets': typeof DietsRoute
+  '/diets': typeof DietsRouteWithChildren
   '/exercises': typeof ExercisesRoute
+  '/food-items': typeof FoodItemsRoute
   '/join-requests': typeof JoinRequestsRoute
   '/login': typeof LoginRoute
   '/members': typeof MembersRouteWithChildren
@@ -182,11 +283,23 @@ export interface FileRoutesById {
   '/revenue-share': typeof RevenueShareRoute
   '/settings': typeof SettingsRoute
   '/subscriptions': typeof SubscriptionsRoute
-  '/workouts': typeof WorkoutsRoute
+  '/workouts': typeof WorkoutsRouteWithChildren
+  '/diets/$id': typeof DietsIdRouteWithChildren
+  '/diets/new': typeof DietsNewRoute
   '/gyms/$id': typeof GymsIdRoute
   '/members/$id': typeof MembersIdRoute
+  '/workouts/$id': typeof WorkoutsIdRouteWithChildren
+  '/workouts/new': typeof WorkoutsNewRoute
+  '/diets/': typeof DietsIndexRoute
   '/gyms/': typeof GymsIndexRoute
   '/members/': typeof MembersIndexRoute
+  '/workouts/': typeof WorkoutsIndexRoute
+  '/diets/$id/edit': typeof DietsIdEditRoute
+  '/diets/$id/members': typeof DietsIdMembersRoute
+  '/workouts/$id/edit': typeof WorkoutsIdEditRoute
+  '/workouts/$id/members': typeof WorkoutsIdMembersRoute
+  '/diets/$id/': typeof DietsIdIndexRoute
+  '/workouts/$id/': typeof WorkoutsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -197,6 +310,7 @@ export interface FileRouteTypes {
     | '/audit-logs'
     | '/diets'
     | '/exercises'
+    | '/food-items'
     | '/join-requests'
     | '/login'
     | '/members'
@@ -206,18 +320,30 @@ export interface FileRouteTypes {
     | '/settings'
     | '/subscriptions'
     | '/workouts'
+    | '/diets/$id'
+    | '/diets/new'
     | '/gyms/$id'
     | '/members/$id'
+    | '/workouts/$id'
+    | '/workouts/new'
+    | '/diets/'
     | '/gyms/'
     | '/members/'
+    | '/workouts/'
+    | '/diets/$id/edit'
+    | '/diets/$id/members'
+    | '/workouts/$id/edit'
+    | '/workouts/$id/members'
+    | '/diets/$id/'
+    | '/workouts/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admins'
     | '/ai-plans'
     | '/audit-logs'
-    | '/diets'
     | '/exercises'
+    | '/food-items'
     | '/join-requests'
     | '/login'
     | '/payouts'
@@ -225,11 +351,20 @@ export interface FileRouteTypes {
     | '/revenue-share'
     | '/settings'
     | '/subscriptions'
-    | '/workouts'
+    | '/diets/new'
     | '/gyms/$id'
     | '/members/$id'
+    | '/workouts/new'
+    | '/diets'
     | '/gyms'
     | '/members'
+    | '/workouts'
+    | '/diets/$id/edit'
+    | '/diets/$id/members'
+    | '/workouts/$id/edit'
+    | '/workouts/$id/members'
+    | '/diets/$id'
+    | '/workouts/$id'
   id:
     | '__root__'
     | '/'
@@ -238,6 +373,7 @@ export interface FileRouteTypes {
     | '/audit-logs'
     | '/diets'
     | '/exercises'
+    | '/food-items'
     | '/join-requests'
     | '/login'
     | '/members'
@@ -247,10 +383,22 @@ export interface FileRouteTypes {
     | '/settings'
     | '/subscriptions'
     | '/workouts'
+    | '/diets/$id'
+    | '/diets/new'
     | '/gyms/$id'
     | '/members/$id'
+    | '/workouts/$id'
+    | '/workouts/new'
+    | '/diets/'
     | '/gyms/'
     | '/members/'
+    | '/workouts/'
+    | '/diets/$id/edit'
+    | '/diets/$id/members'
+    | '/workouts/$id/edit'
+    | '/workouts/$id/members'
+    | '/diets/$id/'
+    | '/workouts/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -258,8 +406,9 @@ export interface RootRouteChildren {
   AdminsRoute: typeof AdminsRoute
   AiPlansRoute: typeof AiPlansRoute
   AuditLogsRoute: typeof AuditLogsRoute
-  DietsRoute: typeof DietsRoute
+  DietsRoute: typeof DietsRouteWithChildren
   ExercisesRoute: typeof ExercisesRoute
+  FoodItemsRoute: typeof FoodItemsRoute
   JoinRequestsRoute: typeof JoinRequestsRoute
   LoginRoute: typeof LoginRoute
   MembersRoute: typeof MembersRouteWithChildren
@@ -268,7 +417,7 @@ export interface RootRouteChildren {
   RevenueShareRoute: typeof RevenueShareRoute
   SettingsRoute: typeof SettingsRoute
   SubscriptionsRoute: typeof SubscriptionsRoute
-  WorkoutsRoute: typeof WorkoutsRoute
+  WorkoutsRoute: typeof WorkoutsRouteWithChildren
   GymsIdRoute: typeof GymsIdRoute
   GymsIndexRoute: typeof GymsIndexRoute
 }
@@ -315,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/exercises'
       fullPath: '/exercises'
       preLoaderRoute: typeof ExercisesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/food-items': {
+      id: '/food-items'
+      path: '/food-items'
+      fullPath: '/food-items'
+      preLoaderRoute: typeof FoodItemsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join-requests': {
@@ -380,6 +536,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkoutsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/diets/': {
+      id: '/diets/'
+      path: '/'
+      fullPath: '/diets/'
+      preLoaderRoute: typeof DietsIndexRouteImport
+      parentRoute: typeof DietsRoute
+    }
+    '/diets/$id': {
+      id: '/diets/$id'
+      path: '/$id'
+      fullPath: '/diets/$id'
+      preLoaderRoute: typeof DietsIdRouteImport
+      parentRoute: typeof DietsRoute
+    }
+    '/diets/new': {
+      id: '/diets/new'
+      path: '/new'
+      fullPath: '/diets/new'
+      preLoaderRoute: typeof DietsNewRouteImport
+      parentRoute: typeof DietsRoute
+    }
     '/gyms/': {
       id: '/gyms/'
       path: '/gyms'
@@ -408,8 +585,100 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembersIdRouteImport
       parentRoute: typeof MembersRoute
     }
+    '/workouts/': {
+      id: '/workouts/'
+      path: '/'
+      fullPath: '/workouts/'
+      preLoaderRoute: typeof WorkoutsIndexRouteImport
+      parentRoute: typeof WorkoutsRoute
+    }
+    '/workouts/$id': {
+      id: '/workouts/$id'
+      path: '/$id'
+      fullPath: '/workouts/$id'
+      preLoaderRoute: typeof WorkoutsIdRouteImport
+      parentRoute: typeof WorkoutsRoute
+    }
+    '/workouts/new': {
+      id: '/workouts/new'
+      path: '/new'
+      fullPath: '/workouts/new'
+      preLoaderRoute: typeof WorkoutsNewRouteImport
+      parentRoute: typeof WorkoutsRoute
+    }
+    '/diets/$id/': {
+      id: '/diets/$id/'
+      path: '/'
+      fullPath: '/diets/$id/'
+      preLoaderRoute: typeof DietsIdIndexRouteImport
+      parentRoute: typeof DietsIdRoute
+    }
+    '/diets/$id/edit': {
+      id: '/diets/$id/edit'
+      path: '/edit'
+      fullPath: '/diets/$id/edit'
+      preLoaderRoute: typeof DietsIdEditRouteImport
+      parentRoute: typeof DietsIdRoute
+    }
+    '/diets/$id/members': {
+      id: '/diets/$id/members'
+      path: '/members'
+      fullPath: '/diets/$id/members'
+      preLoaderRoute: typeof DietsIdMembersRouteImport
+      parentRoute: typeof DietsIdRoute
+    }
+    '/workouts/$id/': {
+      id: '/workouts/$id/'
+      path: '/'
+      fullPath: '/workouts/$id/'
+      preLoaderRoute: typeof WorkoutsIdIndexRouteImport
+      parentRoute: typeof WorkoutsIdRoute
+    }
+    '/workouts/$id/edit': {
+      id: '/workouts/$id/edit'
+      path: '/edit'
+      fullPath: '/workouts/$id/edit'
+      preLoaderRoute: typeof WorkoutsIdEditRouteImport
+      parentRoute: typeof WorkoutsIdRoute
+    }
+    '/workouts/$id/members': {
+      id: '/workouts/$id/members'
+      path: '/members'
+      fullPath: '/workouts/$id/members'
+      preLoaderRoute: typeof WorkoutsIdMembersRouteImport
+      parentRoute: typeof WorkoutsIdRoute
+    }
   }
 }
+
+interface DietsIdRouteChildren {
+  DietsIdEditRoute: typeof DietsIdEditRoute
+  DietsIdMembersRoute: typeof DietsIdMembersRoute
+  DietsIdIndexRoute: typeof DietsIdIndexRoute
+}
+
+const DietsIdRouteChildren: DietsIdRouteChildren = {
+  DietsIdEditRoute: DietsIdEditRoute,
+  DietsIdMembersRoute: DietsIdMembersRoute,
+  DietsIdIndexRoute: DietsIdIndexRoute,
+}
+
+const DietsIdRouteWithChildren =
+  DietsIdRoute._addFileChildren(DietsIdRouteChildren)
+
+interface DietsRouteChildren {
+  DietsIdRoute: typeof DietsIdRouteWithChildren
+  DietsNewRoute: typeof DietsNewRoute
+  DietsIndexRoute: typeof DietsIndexRoute
+}
+
+const DietsRouteChildren: DietsRouteChildren = {
+  DietsIdRoute: DietsIdRouteWithChildren,
+  DietsNewRoute: DietsNewRoute,
+  DietsIndexRoute: DietsIndexRoute,
+}
+
+const DietsRouteWithChildren = DietsRoute._addFileChildren(DietsRouteChildren)
 
 interface MembersRouteChildren {
   MembersIdRoute: typeof MembersIdRoute
@@ -424,13 +693,46 @@ const MembersRouteChildren: MembersRouteChildren = {
 const MembersRouteWithChildren =
   MembersRoute._addFileChildren(MembersRouteChildren)
 
+interface WorkoutsIdRouteChildren {
+  WorkoutsIdEditRoute: typeof WorkoutsIdEditRoute
+  WorkoutsIdMembersRoute: typeof WorkoutsIdMembersRoute
+  WorkoutsIdIndexRoute: typeof WorkoutsIdIndexRoute
+}
+
+const WorkoutsIdRouteChildren: WorkoutsIdRouteChildren = {
+  WorkoutsIdEditRoute: WorkoutsIdEditRoute,
+  WorkoutsIdMembersRoute: WorkoutsIdMembersRoute,
+  WorkoutsIdIndexRoute: WorkoutsIdIndexRoute,
+}
+
+const WorkoutsIdRouteWithChildren = WorkoutsIdRoute._addFileChildren(
+  WorkoutsIdRouteChildren,
+)
+
+interface WorkoutsRouteChildren {
+  WorkoutsIdRoute: typeof WorkoutsIdRouteWithChildren
+  WorkoutsNewRoute: typeof WorkoutsNewRoute
+  WorkoutsIndexRoute: typeof WorkoutsIndexRoute
+}
+
+const WorkoutsRouteChildren: WorkoutsRouteChildren = {
+  WorkoutsIdRoute: WorkoutsIdRouteWithChildren,
+  WorkoutsNewRoute: WorkoutsNewRoute,
+  WorkoutsIndexRoute: WorkoutsIndexRoute,
+}
+
+const WorkoutsRouteWithChildren = WorkoutsRoute._addFileChildren(
+  WorkoutsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminsRoute: AdminsRoute,
   AiPlansRoute: AiPlansRoute,
   AuditLogsRoute: AuditLogsRoute,
-  DietsRoute: DietsRoute,
+  DietsRoute: DietsRouteWithChildren,
   ExercisesRoute: ExercisesRoute,
+  FoodItemsRoute: FoodItemsRoute,
   JoinRequestsRoute: JoinRequestsRoute,
   LoginRoute: LoginRoute,
   MembersRoute: MembersRouteWithChildren,
@@ -439,7 +741,7 @@ const rootRouteChildren: RootRouteChildren = {
   RevenueShareRoute: RevenueShareRoute,
   SettingsRoute: SettingsRoute,
   SubscriptionsRoute: SubscriptionsRoute,
-  WorkoutsRoute: WorkoutsRoute,
+  WorkoutsRoute: WorkoutsRouteWithChildren,
   GymsIdRoute: GymsIdRoute,
   GymsIndexRoute: GymsIndexRoute,
 }

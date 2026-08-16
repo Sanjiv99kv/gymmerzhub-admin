@@ -1,8 +1,23 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Dumbbell, Users, UserPlus, Library, ClipboardList,
-  Salad, Sparkles, CreditCard, PercentCircle, Banknote, ShieldCheck,
-  Settings as SettingsIcon, ScrollText, Search, Bell, LogOut,
+  LayoutDashboard,
+  Dumbbell,
+  Users,
+  UserPlus,
+  Library,
+  ClipboardList,
+  Apple,
+  Salad,
+  Sparkles,
+  CreditCard,
+  PercentCircle,
+  Banknote,
+  ShieldCheck,
+  Settings as SettingsIcon,
+  ScrollText,
+  Search,
+  Bell,
+  LogOut,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -30,8 +45,9 @@ const groups: Group[] = [
   {
     label: "Content",
     items: [
-      { to: "/exercises", label: "Exercise Library", icon: Library },
+      { to: "/exercises", label: "Exercise Catalog", icon: Library },
       { to: "/workouts", label: "Workout Templates", icon: ClipboardList },
+      { to: "/food-items", label: "Food Catalog", icon: Apple },
       { to: "/diets", label: "Diet Templates", icon: Salad },
       { to: "/ai-plans", label: "AI Plans", icon: Sparkles },
     ],
@@ -59,7 +75,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [session, setSession] = useState<AdminSession | null>(null);
   const [ready, setReady] = useState(false);
-  const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/"));
+  const isActive = (to: string) =>
+    to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
 
   useEffect(() => {
     const current = getAdminSession();
@@ -103,11 +120,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <div className="px-5 py-5 border-b border-sidebar-border shrink-0">
           <div className="flex items-center gap-2">
             <img
-              src="/gymmerzhub.png"
+              src="/logo.png"
               alt="GymmerzHub"
               width={28}
               height={28}
-              className="h-7 w-7 rounded-md"
+              className="h-7 w-7 rounded-md object-cover"
             />
             <div>
               <div className="text-sm font-semibold tracking-tight text-foreground">GymmerzHub</div>
@@ -119,7 +136,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4 space-y-6">
           {groups.map((g) => (
             <div key={g.label}>
-              <div className="px-3 mb-2 text-[10px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{g.label}</div>
+              <div className="px-3 mb-2 text-[10px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+                {g.label}
+              </div>
               <div className="space-y-0.5">
                 {g.items.map((item) => {
                   const active = isActive(item.to);
@@ -134,7 +153,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
                           : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-foreground"
                       }`}
                     >
-                      {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-lime" />}
+                      {active && (
+                        <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-lime" />
+                      )}
                       <Icon className="h-4 w-4" />
                       <span>{item.label}</span>
                     </Link>

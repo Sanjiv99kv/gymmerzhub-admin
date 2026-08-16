@@ -63,11 +63,11 @@ export function AuthShell({
         <div className="w-full max-w-[380px] animate-in fade-in slide-in-from-bottom-2 duration-500">
           <div className="mb-9 space-y-4 text-center">
             <img
-              src="/gymmerzhub.png"
+              src="/logo.png"
               alt="GymmerzHub"
               width={56}
               height={56}
-              className="mx-auto h-14 w-14 rounded-[14px] shadow-[0_0_32px_oklch(0.92_0.22_125/0.25)] animate-in zoom-in-95 duration-500"
+              className="mx-auto h-14 w-14 rounded-[14px] object-cover shadow-[0_0_32px_oklch(0.92_0.22_125/0.25)] animate-in zoom-in-95 duration-500"
             />
             <div className="space-y-2">
               <h1 className="font-mono text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">

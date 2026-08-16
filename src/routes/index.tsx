@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
   PageHeader,
   StatCard,
@@ -10,13 +11,13 @@ import {
 import {
   gyms,
   members,
-  joinRequests,
   aiPlans,
   payouts,
   revenueShare,
   chartData,
   auditLogs,
 } from "@/lib/mock";
+import { fetchAdminJoinRequestSummary } from "@/lib/admin-join-requests";
 import {
   AreaChart,
   Area,
@@ -68,15 +69,29 @@ function moneyExact(n: number) {
 }
 
 function Dashboard() {
+  const [pendingJoins, setPendingJoins] = useState(0);
   const verifiedGyms = gyms.filter((g) => g.status === "Verified").length;
   const pendingGyms = gyms.filter((g) => g.status === "Pending").length;
   const suspendedGyms = gyms.filter((g) => g.status === "Suspended").length;
   const activeMembers = members.filter((m) => m.status === "active").length;
   const pastDue = members.filter((m) => m.status === "suspended").length;
-  const pendingJoins = joinRequests.filter((j) => j.status === "Pending").length;
   const flaggedPlans = aiPlans.filter((p) =>
     ["Flagged", "Hidden"].includes(p.status),
   ).length;
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchAdminJoinRequestSummary()
+      .then((summary) => {
+        if (!cancelled) setPendingJoins(summary.pending ?? 0);
+      })
+      .catch(() => {
+        if (!cancelled) setPendingJoins(0);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const pendingPayoutTotal = payouts
     .filter((p) => p.status === "Pending")
     .reduce((sum, p) => sum + p.amount, 0);
